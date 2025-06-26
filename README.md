@@ -3,6 +3,15 @@
 A powerful Telegram security bot that provides real-time URL scanning, threat detection, and group protection against malicious links, phishing attempts, and cyber threats.
 
 ---
+# 🚀 Live Demo
+
+Access the deployed G3r4kiSec Telegram Security Bot dashboard here:
+
+[![Open Dashboard](https://img.shields.io/badge/OPEN%20DASHBOARD-Click%20Here-blue?style=for-the-badge&logo=telegram)](https://telegramsecuritybot-izqz.onrender.com)
+
+🌐 **URL:** [https://telegramsecuritybot-izqz.onrender.com](https://telegramsecuritybot-izqz.onrender.com)
+
+---
 
 ## 🛡️ Features
 
