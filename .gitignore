@@ -1,0 +1,109 @@
+# Environment Variables and Secrets
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+.env.staging
+environment.yml
+secrets.yml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+security_bot.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Payment Processing
+qr_codes/
+payment_temp/
+
+# API Keys and Secrets
+config/secrets.json
+secrets/
+*.key
+*.pem
+*.crt
+*.p12
+api_keys.txt
+credentials.json
+auth_config.yml
+
+# Replit Files
+.replit
+replit.nix
+.upm/
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+
+# Coverage Reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# PyTest
+.pytest_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Flask
+instance/
+.webassets-cache
+
+# Deployment
+*.pid
+*.sock

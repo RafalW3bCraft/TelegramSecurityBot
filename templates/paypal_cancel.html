@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled - Security Bot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .cancel-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .cancel-header {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .cancel-body {
+            padding: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="cancel-container">
+        <div class="cancel-header">
+            <h1><i class="fas fa-times-circle"></i> Payment Cancelled</h1>
+            <p class="mb-0">Your payment was not completed</p>
+        </div>
+        
+        <div class="cancel-body">
+            <div class="alert alert-warning">
+                <h5><i class="fas fa-exclamation-triangle"></i> Payment Not Processed</h5>
+                <p class="mb-0">Your PayPal payment was cancelled and no charges were made.</p>
+            </div>
+            
+            <p>If you'd like to try again, you can:</p>
+            
+            <div class="d-grid gap-2">
+                <a href="/paypal/checkout/{{ payment.id }}" class="btn btn-primary">
+                    <i class="fas fa-redo"></i> Try Payment Again
+                </a>
+                <a href="https://t.me/YourBotUsername" class="btn btn-outline-secondary">
+                    <i class="fab fa-telegram"></i> Return to Telegram Bot
+                </a>
+            </div>
+            
+            <div class="mt-4">
+                <small class="text-muted">
+                    Need help? Contact support in the Telegram bot with <code>/help</code>
+                </small>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

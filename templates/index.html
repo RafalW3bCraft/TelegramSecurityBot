@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+{% block title %}Security Bot Dashboard{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    {% if error %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-danger glass-card" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> {{ error }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="glass-card p-5 text-center">
+                <h1 class="display-4 text-gradient mb-3">
+                    <i class="fas fa-shield-alt"></i> Security Command Center
+                </h1>
+                <p class="lead text-cyan">Advanced threat detection and URL security monitoring</p>
+                <div class="cyber-divider"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card" style="padding: 1.2rem;">
+                <div class="stat-icon" style="font-size: 1.8rem;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div id="total-groups" class="stat-number" style="font-size: 1.8rem;">{{ total_groups|default(0) }}</div>
+                    <div class="stat-label" style="font-size: 0.8rem;">Total Groups</div>
+                    <div class="stat-trend" style="font-size: 0.7rem;">
+                        <i class="fas fa-arrow-up text-success"></i>
+                        <span class="text-success">Active monitoring</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card" style="padding: 1.2rem;">
+                <div class="stat-icon" style="font-size: 1.8rem;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div id="active-groups" class="stat-number" style="font-size: 1.8rem;">{{ active_groups|default(0) }}</div>
+                    <div class="stat-label" style="font-size: 0.8rem;">Active Groups</div>
+                    <div class="stat-trend" style="font-size: 0.7rem;">
+                        <i class="fas fa-heartbeat text-success"></i>
+                        <span class="text-success">Online now</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card" style="padding: 1.2rem;">
+                <div class="stat-icon" style="font-size: 1.8rem;">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="stat-content">
+                    <div id="total-scans" class="stat-number" style="font-size: 1.8rem;">{{ total_scans|default(0) }}</div>
+                    <div class="stat-label" style="font-size: 0.8rem;">Total Scans</div>
+                    <div class="stat-trend" style="font-size: 0.7rem;">
+                        <i class="fas fa-chart-line text-info"></i>
+                        <span class="text-info">{{ recent_scans|default(0) }} today</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card" style="padding: 1.2rem;">
+                <div class="stat-icon" style="font-size: 1.8rem;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <div id="threats-blocked" class="stat-number text-danger" style="font-size: 1.8rem;">{{ threats_blocked|default(0) }}</div>
+                    <div class="stat-label" style="font-size: 0.8rem;">Threats Blocked</div>
+                    <div class="stat-trend" style="font-size: 0.7rem;">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        <span class="text-warning">{{ recent_threats|default(0) }} today</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Activity -->
+        <div class="col-lg-8 mb-4">
+            <div class="glass-card p-4">
+                <div class="card-header-custom mb-4">
+                    <h3 class="card-title">
+                        <i class="fas fa-clock"></i> Recent Security Activity
+                    </h3>
+                    <div class="status-indicator">
+                        <span class="pulse-dot"></span>
+                        Live Feed
+                    </div>
+                </div>
+
+                <div class="activity-feed">
+                    {% if recent_logs %}
+                        {% for log in recent_logs %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                {% if log.scan_result == 'malicious' %}
+                                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                                {% elif log.scan_result == 'suspicious' %}
+                                    <i class="fas fa-exclamation-circle text-warning"></i>
+                                {% else %}
+                                    <i class="fas fa-check-circle text-success"></i>
+                                {% endif %}
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">
+                                    <span>{{ log.domain or 'Unknown Domain' }}</span>
+                                </div>
+                                <small class="text-muted">
+                                    {{ (log.scan_result or 'unknown').title() }} - {{ (log.scan_type or 'individual').title() }} scan
+                                    {% if log.user and log.user.username %}
+                                        by @{{ log.user.username }}
+                                    {% endif %}
+                                    {% if log.group and log.group.name %}
+                                        in {{ log.group.name }}
+                                    {% endif %}
+                                </small>
+                                <div class="activity-time">
+                                    {{ log.date.strftime('%m/%d %H:%M') if log.date else 'N/A' }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No recent activity to display</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts and Analytics -->
+        <div class="col-lg-4 mb-4">
+            <div class="glass-card p-2 mb-2">
+                <h6 class="card-title mb-2" style="font-size: 0.9rem;">
+                    <i class="fas fa-chart-pie"></i> Subscription Tiers
+                </h6>
+                <div style="height: 150px;">
+                    <canvas id="tierChart" height="80" width="200"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-card p-3">
+                <h6 class="card-title mb-3" style="font-size: 0.9rem;">
+                    <i class="fas fa-dollar-sign"></i> Revenue Stats
+                </h6>
+                <div class="revenue-stats">
+                    <div class="revenue-item" style="padding: 0.5rem;">
+                        <div class="revenue-amount text-success" style="font-size: 1.2rem;">
+                            ${{ "%.2f"|format(payment_stats.total_revenue or 0) }}
+                        </div>
+                        <div class="revenue-label" style="font-size: 0.7rem;">Total Revenue</div>
+                    </div>
+                    <div class="revenue-item" style="padding: 0.5rem;">
+                        <div class="revenue-amount text-warning" style="font-size: 1.2rem;">
+                            ${{ "%.2f"|format(payment_stats.monthly_revenue or 0) }}
+                        </div>
+                        <div class="revenue-label" style="font-size: 0.7rem;">This Month</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Status -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h5 class="mb-0">
+                            <i class="fas fa-server"></i> System Status
+                        </h5>
+                        <small class="text-muted">All systems operational</small>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="status-badges">
+                            <span class="badge bg-success me-2">
+                                <i class="fas fa-database"></i> Database
+                            </span>
+                            <span class="badge bg-success me-2">
+                                <i class="fas fa-robot"></i> Bot
+                            </span>
+                            <span class="badge bg-success">
+                                <i class="fas fa-shield-alt"></i> Security
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Last Update Indicator -->
+<div class="position-fixed bottom-0 end-0 p-3">
+    <small id="last-update" class="text-muted bg-dark px-3 py-2 rounded">
+        <i class="fas fa-sync-alt fa-spin"></i> Loading...
+    </small>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Initialize Tier Distribution Chart
+const ctx = document.getElementById('tierChart');
+if (ctx) {
+    // Safely get tier distribution data
+    const tierData = {
+        free: {{ tier_distribution.get('free', 0) if tier_distribution else 0 }},
+        monthly: {{ tier_distribution.get('monthly', 0) if tier_distribution else 0 }},
+        premium: {{ tier_distribution.get('premium', 0) if tier_distribution else 0 }},
+        enterprise: {{ tier_distribution.get('enterprise', 0) if tier_distribution else 0 }}
+    };
+
+    // Destroy existing chart if it exists
+    const existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+        existingChart.destroy();
+    }
+
+    const tierChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Free', 'Monthly', 'Premium', 'Enterprise'],
+            datasets: [{
+                data: [tierData.free, tierData.monthly, tierData.premium, tierData.enterprise],
+                backgroundColor: [
+                    '#6c757d',
+                    '#00ffff', 
+                    '#00ff88',
+                    '#ffc107'
+                ],
+                borderWidth: 2,
+                borderColor: '#0a0a0a',
+                hoverBorderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            devicePixelRatio: 1,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#e0e0e0',
+                        font: {
+                            family: 'Exo 2',
+                            size: 10
+                        },
+                        padding: 8,
+                        boxWidth: 12
+                    }
+                }
+            },
+            elements: {
+                arc: {
+                    borderWidth: 1
+                }
+            }
+        }
+    });
+}
+
+// Real-time dashboard updates
+function updateDashboard() {
+    fetch('/api/realtime-stats', {
+        headers: {
+            'X-API-Key': 'default-key'  // This would normally be from environment
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Update statistics with animation
+            updateStatWithAnimation('total-groups', data.stats.total_groups);
+            updateStatWithAnimation('active-groups', data.stats.active_groups);
+            updateStatWithAnimation('total-scans', data.stats.total_scans);
+            updateStatWithAnimation('threats-blocked', data.stats.threats_blocked);
+
+            // Update timestamp
+            const now = new Date().toLocaleTimeString();
+            document.getElementById('last-update').innerHTML = 
+                `<i class="fas fa-check text-success"></i> Updated ${now}`;
+        }
+    })
+    .catch(error => {
+        console.error('Dashboard update failed:', error);
+        document.getElementById('last-update').innerHTML = 
+            `<i class="fas fa-exclamation-triangle text-warning"></i> Update failed`;
+    });
+}
+
+function updateStatWithAnimation(elementId, newValue) {
+    const element = document.getElementById(elementId);
+    const currentValue = parseInt(element.textContent) || 0;
+
+    if (currentValue !== newValue) {
+        // Flash animation
+        element.style.color = '#00ffff';
+        element.style.transform = 'scale(1.1)';
+
+        setTimeout(() => {
+            element.textContent = newValue;
+            element.style.color = '';
+            element.style.transform = '';
+        }, 300);
+    }
+}
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    // Update every 10 seconds
+    setInterval(updateDashboard, 10000);
+
+    // Initial update after 2 seconds
+    setTimeout(updateDashboard, 2000);
+
+    // Add pulse animation to threat indicators
+    const threatElements = document.querySelectorAll('.stat-number');
+    threatElements.forEach(el => {
+        if (el.textContent > 0 && el.classList.contains('text-danger')) {
+            el.classList.add('pulse-glow');
+        }
+    });
+});
+</script>
+{% endblock %}

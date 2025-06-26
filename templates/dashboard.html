@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Security Bot{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="text-gradient mb-2">
+                            <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                        </h1>
+                        <p class="text-muted mb-0">Group management and monitoring</p>
+                    </div>
+                    <div class="admin-stats">
+                        <div class="stat-mini">
+                            <div class="stat-mini-number">{{ groups.total if groups else 0 }}</div>
+                            <div class="stat-mini-label">Total Groups</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filters -->
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <form method="GET" class="filter-form">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <select name="tier" class="form-select cyber-select">
+                                        <option value="">All Groups</option>
+                                        <option value="free" {% if current_tier_filter == 'free' %}selected{% endif %}>Free Users</option>
+                                        <option value="paid" {% if current_tier_filter == 'paid' %}selected{% endif %}>Credit Purchasers</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <select name="status" class="form-select cyber-select">
+                                        <option value="">All Status</option>
+                                        <option value="active" {% if current_status_filter == 'active' %}selected{% endif %}>Active</option>
+                                        <option value="inactive" {% if current_status_filter == 'inactive' %}selected{% endif %}>Inactive</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-filter"></i> Apply Filters
+                                    </button>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary w-100">
+                                        <i class="fas fa-times"></i> Clear
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Groups Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <div class="card-header-custom mb-4">
+                    <h3 class="card-title">
+                        <i class="fas fa-users"></i> Groups Management
+                    </h3>
+                    <div class="table-controls">
+                        <button class="btn btn-sm btn-outline-primary" onclick="refreshTable()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                {% if groups and groups.items %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <i class="fas fa-tag"></i> Group Info
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-id-card"></i> Group ID
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-crown"></i> Tier
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-power-off"></i> Status
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-search"></i> Scans
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-shield-alt"></i> Threats
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-calendar"></i> Created
+                                    </th>
+                                    <th>
+                                        <i class="fas fa-clock"></i> Last Active
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for group in groups.items %}
+                                    <tr class="group-row" data-group-id="{{ group.group_id }}">
+                                        <td>
+                                            <div class="group-info">
+                                                <div class="group-name">{{ group.name or 'Unknown Group' }}</div>
+                                                <small class="text-muted">{{ group.type or 'group' }}</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <code class="group-id">{{ group.group_id }}</code>
+                                        </td>
+                                        <td>
+                                            {% set tier_class = {
+                                                'free': 'bg-secondary',
+                                                'monthly': 'bg-primary',
+                                                'premium': 'bg-warning',
+                                                'enterprise': 'bg-success'
+                                            } %}
+                                            {% set current_tier = group.tier or 'free' %}
+                                            <span class="badge {{ tier_class.get(current_tier, 'bg-secondary') }}">
+                                                {% if current_tier == 'free' %}
+                                                    <i class="fas fa-gift"></i> Free
+                                                {% elif current_tier == 'monthly' %}
+                                                    <i class="fas fa-calendar-alt"></i> Monthly
+                                                {% elif current_tier == 'premium' %}
+                                                    <i class="fas fa-star"></i> Premium
+                                                {% elif current_tier == 'enterprise' %}
+                                                    <i class="fas fa-building"></i> Enterprise
+                                                {% else %}
+                                                    <i class="fas fa-question"></i> {{ current_tier.title() }}
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if group.active %}
+                                                <span class="badge bg-success pulse-badge">
+                                                    <i class="fas fa-check"></i> Active
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-times"></i> Inactive
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="stat-display">
+                                                <span class="stat-value">{{ group.total_scans_performed or 0 }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="stat-display threat-stat">
+                                                <span class="stat-value text-danger">{{ group.threats_blocked or 0 }}</span>
+                                                {% if group.threats_blocked and group.threats_blocked > 0 %}
+                                                    <i class="fas fa-exclamation-triangle text-warning ms-1"></i>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="date-display">
+                                                {{ group.created_at.strftime('%Y-%m-%d') if group.created_at else 'N/A' }}
+                                                <small class="text-muted d-block">
+                                                    {{ group.created_at.strftime('%H:%M') if group.created_at else '' }}
+                                                </small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="date-display">
+                                                {% if group.last_active %}
+                                                    {{ group.last_active.strftime('%Y-%m-%d') }}
+                                                    <small class="text-muted d-block">
+                                                        {{ group.last_active.strftime('%H:%M') }}
+                                                    </small>
+                                                {% else %}
+                                                    <span class="text-muted">Never</span>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if groups.pages > 1 %}
+                        <nav aria-label="Groups pagination" class="mt-4">
+                            <ul class="pagination justify-content-center cyber-pagination">
+                                {% if groups.has_prev %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('dashboard', page=groups.prev_num, tier=current_tier_filter, status=current_status_filter) }}">
+                                            <i class="fas fa-chevron-left"></i> Previous
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for page_num in groups.iter_pages() %}
+                                    {% if page_num %}
+                                        {% if page_num != groups.page %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ url_for('dashboard', page=page_num, tier=current_tier_filter, status=current_status_filter) }}">
+                                                    {{ page_num }}
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ page_num }}</span>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">…</span>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if groups.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('dashboard', page=groups.next_num, tier=current_tier_filter, status=current_status_filter) }}">
+                                            Next <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                    
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
+                        <h4 class="text-muted mb-3">No Groups Found</h4>
+                        <p class="text-muted">
+                            {% if current_tier_filter or current_status_filter %}
+                                No groups match the current filter criteria.
+                                <br><a href="{{ url_for('dashboard') }}" class="text-primary">Clear filters</a> to see all groups.
+                            {% else %}
+                                No groups have been registered yet.
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function refreshTable() {
+    // Show loading state
+    const refreshBtn = document.querySelector('[onclick="refreshTable()"]');
+    const originalHtml = refreshBtn.innerHTML;
+    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+    refreshBtn.disabled = true;
+    
+    // Reload the page to refresh data
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+}
+
+// Add hover effects to group rows
+document.addEventListener('DOMContentLoaded', function() {
+    const groupRows = document.querySelectorAll('.group-row');
+    
+    groupRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(5px)';
+            this.style.boxShadow = '0 5px 15px rgba(0, 255, 255, 0.2)';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Animate badges
+    const pulseBadges = document.querySelectorAll('.pulse-badge');
+    pulseBadges.forEach(badge => {
+        setInterval(() => {
+            badge.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                badge.style.transform = '';
+            }, 200);
+        }, 3000);
+    });
+});
+</script>
+{% endblock %}

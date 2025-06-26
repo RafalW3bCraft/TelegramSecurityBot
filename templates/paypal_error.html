@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}PayPal Payment Error - Security Bot{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white text-center">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Payment Error</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-times-circle text-danger" style="font-size: 4rem;"></i>
+                    </div>
+                    
+                    <h5 class="text-danger mb-3">Payment Processing Failed</h5>
+                    
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Error:</strong> {{ error }}
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="text-muted">
+                            Your payment could not be processed. Please try again or contact support.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-primary">
+                            <i class="fas fa-home"></i> Return to Dashboard
+                        </a>
+                        <button onclick="history.back()" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Go Back
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-footer text-center text-muted">
+                    <small>
+                        If you continue to experience issues, please contact our support team.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
