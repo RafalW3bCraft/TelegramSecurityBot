@@ -1,0 +1,88 @@
+services:
+  - type: web
+    name: g3r4kisec
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn main:app"
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: PGHOST
+        sync: false
+      - key: PGPORT
+        sync: false
+      - key: PGUSER
+        sync: false
+      - key: PGPASSWORD
+        sync: false
+      - key: PGDATABASE
+        sync: false
+      - key: VIRUSTOTAL_API_KEY
+        sync: false
+      - key: URLHAUS_API_KEY
+        sync: false
+      - key: BTC_WALLET_ADDRESS
+        sync: false
+      - key: TRX_WALLET_ADDRESS
+        sync: false
+      - key: USDT_TRC20_WALLET_ADDRESS
+        sync: false
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_MODE
+        sync: false
+      - key: NOWNODES_API_KEY
+        sync: false
+      - key: BLOCKCYPHER_API_KEY
+        sync: false
+      - key: WEBHOOK_SECRET
+        sync: false
+      - key: RENDER_URL
+        sync: false
+      - key: REPLIT_URL
+        sync: false
+      - key: ADMIN_USER_IDS
+        sync: false
+      - key: ADMIN_API_KEY
+        sync: false
+      - key: READONLY_API_KEY
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: INDIVIDUAL_SCAN_PRICE
+        sync: false
+      - key: GROUP_SCAN_PRICE
+        sync: false
+      - key: INDIVIDUAL_SCAN_QUANTITY
+        sync: false
+      - key: GROUP_SCAN_QUANTITY
+        sync: false
+      - key: FLASK_ENV
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: PORT
+        value: "5000"
+      - key: AUTO_BLOCK_THRESHOLD
+        sync: false
+      - key: AUTO_BLOCK_ENABLED
+        sync: false
+      - key: API_RATE_LIMIT
+        sync: false
+      - key: GENERAL_RATE_LIMIT
+        sync: false
+      - key: CACHE_TTL
+        sync: false
+      - key: CACHE_ENABLED
+        sync: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: LOG_FILE
+        value: security_bot.log
