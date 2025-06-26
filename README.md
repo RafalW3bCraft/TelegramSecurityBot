@@ -1,6 +1,8 @@
-# Security Bot - Comprehensive Telegram Threat Detection System
+# G3r4kiSec - Comprehensive Telegram Threat Detection System
 
 A powerful Telegram security bot that provides real-time URL scanning, threat detection, and group protection against malicious links, phishing attempts, and cyber threats.
+
+---
 
 ## 🛡️ Features
 
@@ -31,6 +33,8 @@ A powerful Telegram security bot that provides real-time URL scanning, threat de
 - **Flexible Plans**: Individual scans, group subscriptions, enterprise tiers
 - **Automatic Processing**: QR code generation and payment verification
 
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -43,13 +47,17 @@ A powerful Telegram security bot that provides real-time URL scanning, threat de
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/RafalW3bCraft/security-bot.git
-   cd security-bot
+   git clone https://github.com/RafalW3bCraft/TelegramSecurityBot.git
+   cd G3r4kiSec
    ```
 
 2. **Install Dependencies**
    ```bash
    pip install -r requirements.txt
+   ```
+   Or, if using uv:
+   ```bash
+   uv pip install -r requirements.txt
    ```
 
 3. **Environment Configuration**
@@ -57,31 +65,30 @@ A powerful Telegram security bot that provides real-time URL scanning, threat de
    ```env
    # Telegram Bot Configuration
    BOT_TOKEN=your_telegram_bot_token_here
-   
+
    # Database Configuration
-   DATABASE_URL=postgresql://username:password@hostname:5432/database_name
-   
-   # PostgreSQL Environment Variables (for Replit compatibility)
-   PGHOST=your_postgres_host
+   DATABASE_URL=postgresql://admin:admin@your_host:5432/secura?sslmode=require
+
+   # PostgreSQL Environment Variables
+   PGHOST=your_host
    PGPORT=5432
-   PGUSER=your_postgres_user
-   PGPASSWORD=your_postgres_password
-   PGDATABASE=your_database_name
-   
+   PGUSER=admin
+   PGPASSWORD=admin
+   PGDATABASE=secura
+
    # API Keys (Optional but Recommended)
    VIRUSTOTAL_API_KEY=your_virustotal_api_key
-   
+
    # Payment Configuration
    BTC_WALLET_ADDRESS=your_bitcoin_wallet_address
    TRX_WALLET_ADDRESS=your_tron_wallet_address
    USDT_WALLET_ADDRESS=your_usdt_trc20_wallet_address
-   
+
    # Security Settings
    ADMIN_USER_IDS=123456789,987654321  # Comma-separated admin Telegram IDs
    API_KEY=your_api_key_for_dashboard
    SESSION_SECRET=your_session_secret_key
    ```
-   
    **Important**: Never commit `.env` files to version control. The `.gitignore` file is configured to exclude all environment files.
 
 4. **Database Setup**
@@ -93,6 +100,8 @@ A powerful Telegram security bot that provides real-time URL scanning, threat de
    ```bash
    python main.py
    ```
+
+---
 
 ## 📖 Usage Guide
 
@@ -132,68 +141,49 @@ Access the admin dashboard at `http://localhost:5000` (or your deployed URL):
 - `GET /api/system/health` - System health check
 - `GET /api/stats/realtime` - Real-time dashboard statistics
 
-### Advanced Configuration
-
-#### Custom Threat Patterns
-Add custom threat detection patterns in `threat_intelligence.py`:
-```python
-# Add to malicious_patterns list
-r'your_custom_pattern_here',
-r'another_threat_pattern',
-```
-
-#### Whitelist Management
-Configure trusted domains in the admin dashboard or via database:
-```sql
-INSERT INTO whitelist (domain, reason) VALUES ('trusted-site.com', 'Business partner');
-```
-
-#### Rate Limiting
-Adjust rate limits in `security_middleware.py`:
-```python
-# API rate limiting (requests per minute)
-API_RATE_LIMIT = 60
-GENERAL_RATE_LIMIT = 300
-```
-
-## 🏗️ Architecture
-
-### System Components
-- **Flask Web Application**: Admin dashboard and API endpoints
-- **Telegram Bot**: Real-time message monitoring and user interaction
-- **Threat Intelligence**: Multi-source URL analysis engine
-- **Payment Processor**: Cryptocurrency and PayPal integration
-- **Security Middleware**: Rate limiting and authentication
-
-### Database Schema
-- **Users**: Telegram user management and quota tracking
-- **TelegramGroups**: Group subscriptions and monitoring
-- **ScanLogs**: Complete audit trail of all scans performed
-- **Payments**: Transaction history and payment verification
-- **Whitelist**: Trusted domains and exceptions
-
-### Security Features
-- **Rate Limiting**: API and general request throttling
-- **Authentication**: API key protection for sensitive endpoints
-- **Input Validation**: Comprehensive URL and data sanitization
-- **Audit Logging**: Complete activity tracking and monitoring
+---
 
 ## 🔧 Development
 
 ### Project Structure
 ```
-security-bot/
-├── app.py                 # Flask application initialization
-├── main.py               # Main entry point
-├── bot_runner.py         # Telegram bot implementation
-├── threat_intelligence.py # URL scanning and analysis
-├── payment_processor.py  # Payment handling
-├── routes.py             # Web dashboard routes
-├── models.py             # Database models
-├── security_middleware.py # Security and rate limiting
-├── static/               # CSS, JS, and assets
-├── templates/            # HTML templates
-└── requirements.txt      # Python dependencies
+G3r4kiSec/
+├── app.py                   # Flask application initialization
+├── main.py                  # Main entry point
+├── bot_runner.py            # Telegram bot implementation
+├── threat_intelligence.py   # URL scanning and analysis
+├── payment_processor.py     # Payment handling
+├── payment_monitor.py       # Payment monitoring and verification
+├── payment_verification.py  # Payment verification logic
+├── paypal_integration.py    # PayPal integration
+├── webhook_payment_processor.py # Webhook payment handling
+├── webhook_routes.py        # Webhook routes for payments
+├── group_scanner.py         # Group scanning logic
+├── core.py                  # Core utilities and logic
+├── routes.py                # Web dashboard routes
+├── models.py                # Database models
+├── security_middleware.py   # Security and rate limiting
+├── utils.py                 # Utility functions
+├── static/                  # CSS, JS, and assets
+│   ├── css/
+│   │   └── cyberpunk.css
+│   └── js/
+│       └── dashboard.js
+├── templates/               # HTML templates
+│   ├── base.html
+│   ├── dashboard.html
+│   ├── index.html
+│   ├── paypal_cancel.html
+│   ├── paypal_checkout.html
+│   ├── paypal_error.html
+│   └── paypal_success.html
+├── requirements.txt         # Python dependencies
+├── pyproject.toml           # Project metadata and dependencies
+├── uv.lock                  # Lock file for dependencies
+├── LICENSE
+├── README.md
+├── .gitignore
+└── replit.md                # Replit deployment instructions
 ```
 
 ### Adding New Features
@@ -235,6 +225,32 @@ for url in test_urls:
 "
 ```
 
+---
+
+## 🏗️ Architecture
+
+### System Components
+- **Flask Web Application**: Admin dashboard and API endpoints
+- **Telegram Bot**: Real-time message monitoring and user interaction
+- **Threat Intelligence**: Multi-source URL analysis engine
+- **Payment Processor**: Cryptocurrency and PayPal integration
+- **Security Middleware**: Rate limiting and authentication
+
+### Database Schema
+- **Users**: Telegram user management and quota tracking
+- **TelegramGroups**: Group subscriptions and monitoring
+- **ScanLogs**: Complete audit trail of all scans performed
+- **Payments**: Transaction history and payment verification
+- **Whitelist**: Trusted domains and exceptions
+
+### Security Features
+- **Rate Limiting**: API and general request throttling
+- **Authentication**: API key protection for sensitive endpoints
+- **Input Validation**: Comprehensive URL and data sanitization
+- **Audit Logging**: Complete activity tracking and monitoring
+
+---
+
 ## 🚢 Deployment
 
 ### Production Environment
@@ -263,6 +279,8 @@ This project is optimized for Replit deployment:
 1. Fork the repository
 2. Set environment variables in Replit Secrets
 3. Run the application - it will automatically start
+
+---
 
 ## 📊 API Reference
 
@@ -311,6 +329,8 @@ GET /api/user/{telegram_id}/stats
 }
 ```
 
+---
+
 ## 🛠️ Troubleshooting
 
 ### Common Issues
@@ -354,6 +374,8 @@ GET /api/user/{telegram_id}/stats
    - Implement exponential backoff for API calls
    - Use queuing for batch processing
 
+---
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -368,6 +390,8 @@ GET /api/user/{telegram_id}/stats
 - Use type hints where applicable
 - Add docstrings for all functions
 - Include error handling and logging
+
+---
 
 ## 📝 License
 
@@ -393,12 +417,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+---
+
 ## 📞 Support
 
 - **Issues**: Report bugs and feature requests on GitHub
 - **Documentation**: Check the wiki for detailed guides
 - **Security**: Report security vulnerabilities privately to RafalW3bCraft
 - **Community**: Join discussions in the project's GitHub Discussions
+
+---
 
 ## 🔮 Roadmap
 
@@ -421,4 +449,4 @@ SOFTWARE.
 
 **Built with ❤️ by RafalW3bCraft**
 
-For more information, visit the [project repository](https://github.com/RafalW3bCraft/security-bot).
+For more information, visit the [project repository](https://github.com/RafalW3bCraft/TelegramSecurityBot).
